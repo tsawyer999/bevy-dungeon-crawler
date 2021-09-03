@@ -1,8 +1,8 @@
 mod camera;
 mod light;
 
-use crate::camera::spawn_camera;
-use crate::light::Rotates;
+use camera::spawn_camera;
+use light::Rotates;
 use bevy::{pbr::AmbientLight, prelude::*};
 
 fn main() {

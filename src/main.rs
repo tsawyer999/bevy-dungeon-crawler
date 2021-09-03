@@ -1,13 +1,13 @@
 mod camera;
 mod light;
 
-use bevy::{pbr::AmbientLight, prelude::*};
-use crate::light::Rotates;
 use crate::camera::spawn_camera;
+use crate::light::Rotates;
+use bevy::{pbr::AmbientLight, prelude::*};
 
 // just to catch compilation errors
-    // let _ = App::build()
-    //     .add_startup_system(spawn_camera.system());
+// let _ = App::build()
+//     .add_startup_system(spawn_camera.system());
 
 fn main() {
     App::build()
@@ -25,7 +25,6 @@ fn main() {
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-
     spawn_creature(asset_server, &mut commands, "models/bat.gltf#Scene0");
 
     spawn_camera(&mut commands);
@@ -33,7 +32,11 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     spawn_light(&mut commands);
 }
 
-fn spawn_creature(asset_server: Res<AssetServer>, commands: &mut Commands, model_path: &'static str) {
+fn spawn_creature(
+    asset_server: Res<AssetServer>,
+    commands: &mut Commands,
+    model_path: &'static str,
+) {
     let scene = asset_server.load(model_path);
     commands.spawn_scene(scene);
 }

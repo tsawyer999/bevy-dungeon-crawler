@@ -1,7 +1,18 @@
+mod camera;
+
 use bevy::{pbr::AmbientLight, prelude::*};
+
+
+
+    // just to catch compilation errors
+    // let _ = App::build()
+    //     .add_startup_system(spawn_camera.system());
 
 fn main() {
     App::build()
+        // .add_plugins(DefaultPlugins)
+//         .add_startup_system(spawn_scene.system())
+//         .add_system(pan_orbit_camera.system())
         .insert_resource(AmbientLight {
             color: Color::WHITE,
             brightness: 1.0 / 5.0f32,
@@ -14,12 +25,27 @@ fn main() {
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let scene = asset_server.load("models/bat.gltf#Scene0");
+
+    spawn_creature(asset_server, &mut commands, "models/bat.gltf#Scene0");
+
+    spawn_camera(&mut commands);
+
+    spawn_light(&mut commands);
+}
+
+fn spawn_creature(asset_server: Res<AssetServer>, commands: &mut Commands, model_path: &'static str) {
+    let scene = asset_server.load(model_path);
     commands.spawn_scene(scene);
+}
+
+fn spawn_camera(commands: &mut Commands) {
     commands.spawn_bundle(PerspectiveCameraBundle {
         transform: Transform::from_xyz(-1.0,1.0,-1.0).looking_at(Vec3::new(0.0, 0.0, 0.0), Vec3::Y),
         ..Default::default()
     });
+}
+
+fn spawn_light(commands: &mut Commands) {
     commands
         .spawn_bundle(LightBundle {
             transform: Transform::from_xyz(3.0, 5.0, 3.0),

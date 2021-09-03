@@ -4,7 +4,7 @@ use bevy::render::camera::PerspectiveProjection;
 
 pub struct PanOrbitCamera {
     pub focus: Vec3,
-    pub radius: f32,
+    pub radius: f64,
     pub upside_down: bool,
 }
 

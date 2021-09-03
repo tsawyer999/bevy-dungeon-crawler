@@ -1,10 +1,10 @@
 mod camera;
+mod light;
 
 use bevy::{pbr::AmbientLight, prelude::*};
+use crate::light::Rotates;
 
-
-
-    // just to catch compilation errors
+// just to catch compilation errors
     // let _ = App::build()
     //     .add_startup_system(spawn_camera.system());
 
@@ -20,7 +20,7 @@ fn main() {
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
-        .add_system(rotator_system.system())
+        .add_system(light::rotator_system.system())
         .run();
 }
 
@@ -52,14 +52,4 @@ fn spawn_light(commands: &mut Commands) {
             ..Default::default()
         })
         .insert(Rotates);
-}
-
-struct Rotates;
-
-fn rotator_system(time: Res<Time>, mut query: Query<&mut Transform, With<Rotates>>) {
-    for mut transform in query.iter_mut() {
-        *transform = Transform::from_rotation(Quat::from_rotation_y(
-            (4.0 * std::f32::consts::PI / 20.0) * time.delta_seconds(),
-        )) * *transform;
-    }
 }

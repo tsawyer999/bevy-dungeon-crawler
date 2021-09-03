@@ -2,8 +2,7 @@ use bevy::prelude::*;
 use bevy::input::mouse::{MouseWheel,MouseMotion};
 use bevy::render::camera::PerspectiveProjection;
 
-struct PanOrbitCamera {
-    /// The "focus point" to orbit around. It is automatically updated when panning the camera
+pub struct PanOrbitCamera {
     pub focus: Vec3,
     pub radius: f32,
     pub upside_down: bool,
@@ -19,8 +18,7 @@ impl Default for PanOrbitCamera {
     }
 }
 
-/// Pan the camera with middle mouse click, zoom with scroll wheel, orbit with right mouse click.
-pub(crate) fn pan_orbit_camera(
+pub fn pan_orbit_camera(
     windows: Res<Windows>,
     mut ev_motion: EventReader<MouseMotion>,
     mut ev_scroll: EventReader<MouseWheel>,
@@ -108,7 +106,6 @@ fn get_primary_window_size(windows: &Res<Windows>) -> Vec2 {
     window
 }
 
-/// Spawn a camera like this
 pub fn spawn_camera(commands: &mut Commands) {
     let translation = Vec3::new(-1.0,1.0,-1.0);
     let radius = translation.length();
@@ -121,25 +118,4 @@ pub fn spawn_camera(commands: &mut Commands) {
         radius,
         ..Default::default()
     });
-}
-// ANCHOR_END: example
-
-pub fn spawn_scene(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    // spawn a cube and a light
-    commands.spawn_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
-        material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-        transform: Transform::from_translation(Vec3::new(0.0, 0.5, 0.0)),
-        ..Default::default()
-    });
-    commands.spawn_bundle(LightBundle {
-        transform: Transform::from_translation(Vec3::new(4.0, 8.0, 4.0)),
-        ..Default::default()
-    });
-
-    spawn_camera(&mut commands);
 }

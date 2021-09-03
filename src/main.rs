@@ -12,8 +12,6 @@ use crate::camera::spawn_camera;
 fn main() {
     App::build()
         // .add_plugins(DefaultPlugins)
-        // .add_startup_system(spawn_scene.system())
-        // .add_system(pan_orbit_camera.system())
         .insert_resource(AmbientLight {
             color: Color::WHITE,
             brightness: 1.0 / 5.0f32,
@@ -22,6 +20,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
         .add_system(light::rotator_system.system())
+        .add_system(camera::pan_orbit_camera.system())
         .run();
 }
 

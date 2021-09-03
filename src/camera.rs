@@ -109,8 +109,8 @@ fn get_primary_window_size(windows: &Res<Windows>) -> Vec2 {
 }
 
 /// Spawn a camera like this
-fn spawn_camera(mut commands: Commands) {
-    let translation = Vec3::new(-2.0, 2.5, 5.0);
+pub fn spawn_camera(commands: &mut Commands) {
+    let translation = Vec3::new(-1.0,1.0,-1.0);
     let radius = translation.length();
 
     commands.spawn_bundle(PerspectiveCameraBundle {
@@ -124,7 +124,7 @@ fn spawn_camera(mut commands: Commands) {
 }
 // ANCHOR_END: example
 
-fn spawn_scene(
+pub fn spawn_scene(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
@@ -141,5 +141,5 @@ fn spawn_scene(
         ..Default::default()
     });
 
-    spawn_camera(commands);
+    spawn_camera(&mut commands);
 }

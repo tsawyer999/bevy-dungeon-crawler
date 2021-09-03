@@ -3,6 +3,7 @@ mod light;
 
 use bevy::{pbr::AmbientLight, prelude::*};
 use crate::light::Rotates;
+use crate::camera::spawn_camera;
 
 // just to catch compilation errors
     // let _ = App::build()
@@ -11,8 +12,8 @@ use crate::light::Rotates;
 fn main() {
     App::build()
         // .add_plugins(DefaultPlugins)
-//         .add_startup_system(spawn_scene.system())
-//         .add_system(pan_orbit_camera.system())
+        // .add_startup_system(spawn_scene.system())
+        // .add_system(pan_orbit_camera.system())
         .insert_resource(AmbientLight {
             color: Color::WHITE,
             brightness: 1.0 / 5.0f32,
@@ -37,14 +38,14 @@ fn spawn_creature(asset_server: Res<AssetServer>, commands: &mut Commands, model
     let scene = asset_server.load(model_path);
     commands.spawn_scene(scene);
 }
-
+/*
 fn spawn_camera(commands: &mut Commands) {
     commands.spawn_bundle(PerspectiveCameraBundle {
         transform: Transform::from_xyz(-1.0,1.0,-1.0).looking_at(Vec3::new(0.0, 0.0, 0.0), Vec3::Y),
         ..Default::default()
     });
 }
-
+*/
 fn spawn_light(commands: &mut Commands) {
     commands
         .spawn_bundle(LightBundle {

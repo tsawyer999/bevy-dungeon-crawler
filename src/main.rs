@@ -37,20 +37,3 @@ fn rotator_system(time: Res<Time>, mut query: Query<&mut Transform, With<Rotates
         )) * *transform;
     }
 }
-/*
-fn player_movement(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut query: Query<(&Speed, &mut Transform, With<Scene>)>
-) {
-    if let Ok((speed, mut transform, _)) = query.single_mut() {
-        let dir = if keyboard_input.pressed(KeyCode::Left) {
-            -1.0
-        } else if keyboard_input.pressed(KeyCode::Right) {
-            1.0
-        } else {
-            0.0
-        };
-        transform.translation.x += dir * speed.0 * TIME_STEP;
-    }
-}
-*/

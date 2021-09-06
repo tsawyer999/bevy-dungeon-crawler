@@ -16,6 +16,7 @@ fn main() {
         .add_startup_system(setup.system())
         .add_system(light::rotator_system.system())
         .add_system(camera::pan_camera.system())
+        .add_system(camera::orbit_camera.system())
         .run();
 }
 

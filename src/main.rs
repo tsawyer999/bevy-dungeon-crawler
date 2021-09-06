@@ -14,7 +14,7 @@ fn main() {
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
-        .add_system(light::rotator_system.system())
+        .add_system(light::rotator.system())
         .add_system(camera::pan_camera.system())
         .add_system(camera::orbit_camera.system())
         .run();

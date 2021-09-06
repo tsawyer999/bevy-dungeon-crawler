@@ -30,32 +30,33 @@ pub fn pan_camera(
 ) {
     let mut pan = Vec2::ZERO;
 
-    if input_mouse.pressed(PAN_BUTTON) {
-        // Pan only if we're not rotating at the moment
-        for ev in ev_motion.iter() {
-            pan += ev.delta;
-        }
+    if !input_mouse.pressed(PAN_BUTTON) {
+        return;
     }
-
+    for ev in ev_motion.iter() {
+        pan += ev.delta;
+    }
+    if pan.length_squared() <= 0.0 {
+        return;
+    }
     for (mut pan_orbit, mut transform, projection) in query.iter_mut() {
-        if pan.length_squared() > 0.0 {
-            // make panning distance independent of resolution and FOV,
-            let window = get_primary_window_size(&windows);
-            pan *= Vec2::new(projection.fov * projection.aspect_ratio, projection.fov) / window;
-            // translate by local axes
-            let right = transform.rotation * Vec3::X * -pan.x;
-            let up = transform.rotation * Vec3::Y * pan.y;
-            // make panning proportional to distance away from focus point
-            let translation = (right + up) * pan_orbit.radius;
-            pan_orbit.focus += translation;
+        // make panning distance independent of resolution and FOV,
+        let window = get_primary_window_size(&windows);
+        pan *= Vec2::new(projection.fov * projection.aspect_ratio, projection.fov) / window;
+        // translate by local axes
+        let right = transform.rotation * Vec3::X * -pan.x;
+        let up = transform.rotation * Vec3::Y * pan.y;
+        // make panning proportional to distance away from focus point
+        let translation = (right + up) * pan_orbit.radius;
+        pan_orbit.focus += translation;
 
-            // emulating parent/child to make the yaw/y-axis rotation behave like a turntable
-            // parent = x and y rotation
-            // child = z-offset
-            let rot_matrix = Mat3::from_quat(transform.rotation);
-            transform.translation =
-                pan_orbit.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, pan_orbit.radius));
-        }
+        // emulating parent/child to make the yaw/y-axis rotation behave like a turntable
+        // parent = x and y rotation
+        // child = z-offset
+        let rot_matrix = Mat3::from_quat(transform.rotation);
+        transform.translation =
+            pan_orbit.focus + rot_matrix.mul_vec3(Vec3::new(0.0, 0.0, pan_orbit.radius));
+
     }
 }
 

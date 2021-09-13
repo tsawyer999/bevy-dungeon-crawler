@@ -23,23 +23,25 @@ fn main() {
 
 fn setup(
     mut commands: Commands,
-    meshes: ResMut<Assets<Mesh>>,
+    mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
 ) {
     let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
+    let creature_mesh = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
+    let plane_mesh = meshes.add(Mesh::from(shape::Plane { size: 5.0 }));
 
     spawn_mesh(
         &mut commands,
         Vec3::new(1.0, 0.0, 0.0),
-        asset_server.load("models/bat.gltf#Mesh0/Primitive0"),
+        creature_mesh.clone(),
         stone_material.clone(),
     );
 
     spawn_mesh(
         &mut commands,
         Vec3::new(-1.0, 0.0, 0.0),
-        asset_server.load("models/bat.gltf#Mesh0/Primitive0"),
+        creature_mesh.clone(),
         stone_material.clone(),
     );
 
@@ -49,19 +51,24 @@ fn setup(
         Vec3::new(0.0, 0.0, 0.0),
     );
 
-    spawn_light(&mut commands);
+    spawn_light(&mut commands,
+                Vec3::new(3.0, 5.0, 3.0)
+    );
 
-    spawn_plane(&mut commands, meshes, stone_material.clone());
+    spawn_plane(&mut commands,
+                plane_mesh.clone(),
+                stone_material.clone()
+    );
 }
 
 fn spawn_plane(
     commands: &mut Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
+    mesh: Handle<Mesh>,
     material: Handle<StandardMaterial>,
 ) {
     commands.spawn_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Plane { size: 5.0 })),
-        material: material,
+        mesh,
+        material,
         transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
         ..Default::default()
     });
@@ -85,10 +92,11 @@ fn spawn_mesh(
     });
 }
 
-fn spawn_light(commands: &mut Commands) {
+fn spawn_light(commands: &mut Commands,
+               position: Vec3) {
     commands
         .spawn_bundle(LightBundle {
-            transform: Transform::from_xyz(3.0, 5.0, 3.0),
+            transform: Transform::from_translation(position),
             ..Default::default()
         })
         .insert(Rotates);

@@ -51,21 +51,12 @@ fn setup(
         Vec3::new(0.0, 0.0, 0.0),
     );
 
-    spawn_light(&mut commands,
-                Vec3::new(3.0, 5.0, 3.0)
-    );
+    spawn_light(&mut commands, Vec3::new(3.0, 5.0, 3.0));
 
-    spawn_plane(&mut commands,
-                plane_mesh.clone(),
-                stone_material.clone()
-    );
+    spawn_plane(&mut commands, plane_mesh.clone(), stone_material.clone());
 }
 
-fn spawn_plane(
-    commands: &mut Commands,
-    mesh: Handle<Mesh>,
-    material: Handle<StandardMaterial>,
-) {
+fn spawn_plane(commands: &mut Commands, mesh: Handle<Mesh>, material: Handle<StandardMaterial>) {
     commands.spawn_bundle(PbrBundle {
         mesh,
         material,
@@ -92,8 +83,7 @@ fn spawn_mesh(
     });
 }
 
-fn spawn_light(commands: &mut Commands,
-               position: Vec3) {
+fn spawn_light(commands: &mut Commands, position: Vec3) {
     commands
         .spawn_bundle(LightBundle {
             transform: Transform::from_translation(position),

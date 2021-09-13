@@ -21,29 +21,31 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(mut commands: Commands,
+         meshes: ResMut<Assets<Mesh>>,
+         materials: ResMut<Assets<StandardMaterial>>,
+         asset_server: Res<AssetServer>) {
     spawn_creature(asset_server, &mut commands, "models/bat.gltf#Scene0");
 
     spawn_camera(&mut commands);
 
     spawn_light(&mut commands);
 
-    // spawn_plane(&mut commands);
+    spawn_plane(&mut commands, meshes, materials);
 }
-/*
+
 fn spawn_plane(
     commands: &mut Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>) {
-    commands.spawn(PbrBundle {
+
+    commands.spawn_bundle(PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Plane { size: 8.0 })),
-        material: materials.add(Color::rgb(1., 0.9, 0.9).into()),
-        transform: Transform::from_translation(Vec3::new(4., 0., 4.)),
+        material: materials.add(Color::rgb(0.5, 0.5, 0.5).into()),
+        transform: Transform::from_translation(Vec3::new(4.0, 0.0, 4.0)),
         ..Default::default()
     });
 }
-
- */
 
 fn spawn_creature(
     asset_server: Res<AssetServer>,

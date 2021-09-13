@@ -28,7 +28,7 @@ fn setup(mut commands: Commands,
 
     let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
 
-    spawn_creature(asset_server, &mut commands, "models/bat.gltf#Scene0", stone_material.clone());
+    spawn_creature(asset_server, &mut commands, "models/bat.gltf#Mesh0/Primitive0", stone_material.clone());
 
     spawn_camera(&mut commands);
 
@@ -56,8 +56,6 @@ fn spawn_creature(
     model_path: &'static str,
     material: Handle<StandardMaterial>,
 ) {
-    // let scene = asset_server.load(model_path);
-    // commands.spawn_scene(scene);
     let creature: Handle<Mesh> = asset_server.load(model_path);
     commands.spawn_bundle(PbrBundle {
         transform: Transform::from_translation(Vec3::new(

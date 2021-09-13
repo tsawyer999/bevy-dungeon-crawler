@@ -39,7 +39,6 @@ pub fn pan_camera(
         return;
     }
     for (mut pan_orbit, mut transform, projection) in query.iter_mut() {
-
         // make panning distance independent of resolution and FOV,
         let window = get_primary_window_size(&windows);
         pan *= Vec2::new(projection.fov * projection.aspect_ratio, projection.fov) / window;
@@ -50,7 +49,8 @@ pub fn pan_camera(
         let translation = (right + up) * pan_orbit.radius;
         pan_orbit.focus += translation;
 
-        transform.translation = get_translation(transform.rotation, pan_orbit.focus, pan_orbit.radius);
+        transform.translation =
+            get_translation(transform.rotation, pan_orbit.focus, pan_orbit.radius);
     }
 }
 
@@ -94,7 +94,8 @@ pub fn orbit_camera(
         transform.rotation = yaw * transform.rotation; // rotate around global y axis
         transform.rotation *= pitch; // rotate around local x axis
 
-        transform.translation = get_translation(transform.rotation, pan_orbit.focus, pan_orbit.radius);
+        transform.translation =
+            get_translation(transform.rotation, pan_orbit.focus, pan_orbit.radius);
     }
 }
 
@@ -115,7 +116,8 @@ pub fn scroll_camera(
         // dont allow zoom to reach zero or you get stuck
         pan_orbit.radius = f32::max(pan_orbit.radius, 0.05);
 
-        transform.translation = get_translation(transform.rotation, pan_orbit.focus, pan_orbit.radius);
+        transform.translation =
+            get_translation(transform.rotation, pan_orbit.focus, pan_orbit.radius);
     }
 }
 
@@ -133,13 +135,12 @@ fn get_primary_window_size(windows: &Res<Windows>) -> Vec2 {
     Vec2::new(window.width() as f32, window.height() as f32)
 }
 
-pub fn spawn_camera(commands: &mut Commands) {
-    let translation = Vec3::new(-1.0, 1.0, -1.0);
-    let radius = translation.length();
+pub fn spawn_camera(commands: &mut Commands, position: Vec3, look_at: Vec3) {
+    let radius = position.length();
 
     commands
         .spawn_bundle(PerspectiveCameraBundle {
-            transform: Transform::from_translation(translation).looking_at(Vec3::ZERO, Vec3::Y),
+            transform: Transform::from_translation(position).looking_at(look_at, Vec3::Y),
             ..Default::default()
         })
         .insert(PanOrbitCamera {

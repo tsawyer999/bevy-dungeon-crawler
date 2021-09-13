@@ -28,7 +28,8 @@ fn setup(mut commands: Commands,
 
     let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
 
-    spawn_creature(asset_server, &mut commands, "models/bat.gltf#Mesh0/Primitive0", stone_material.clone());
+    let mesh: Handle<Mesh> = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
+    spawn_mesh(&mut commands, mesh.clone(), stone_material.clone());
 
     spawn_camera(&mut commands);
 
@@ -50,31 +51,20 @@ fn spawn_plane(
     });
 }
 
-fn spawn_creature(
-    asset_server: Res<AssetServer>,
+fn spawn_mesh(
     commands: &mut Commands,
-    model_path: &'static str,
+    mesh: Handle<Mesh>,
     material: Handle<StandardMaterial>,
 ) {
-    let creature: Handle<Mesh> = asset_server.load(model_path);
     commands.spawn_bundle(PbrBundle {
-        transform: Transform::from_translation(Vec3::new(
-            1.0,
-            1.0,
-            1.0
-        )),
-        ..Default::default()
-    }).with_children(|parent| {
-        parent.spawn_bundle(PbrBundle {
-        mesh: creature,
+        mesh,
         material,
         transform: {
-            let mut transform = Transform::from_translation(Vec3::new(-0.1, 0., 1.8));
-            transform.apply_non_uniform_scale(Vec3::new(0.2, 0.2, 0.2));
+            let mut transform = Transform::from_translation(Vec3::new(0.0, 0.0, 0.0));
+            transform.scale = Vec3::new(0.01, 0.01, 0.01);
             transform
         },
         ..Default::default()
-        });
     });
 }
 

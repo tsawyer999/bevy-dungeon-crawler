@@ -23,26 +23,29 @@ fn main() {
 
 fn setup(mut commands: Commands,
          meshes: ResMut<Assets<Mesh>>,
-         materials: ResMut<Assets<StandardMaterial>>,
+         mut materials: ResMut<Assets<StandardMaterial>>,
          asset_server: Res<AssetServer>) {
-    spawn_creature(asset_server, &mut commands, "models/bat.gltf#Scene0");
+
+    let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
+
+    spawn_creature(asset_server, &mut commands, "models/bat.gltf#Scene0", stone_material.clone());
 
     spawn_camera(&mut commands);
 
     spawn_light(&mut commands);
 
-    spawn_plane(&mut commands, meshes, materials);
+    spawn_plane(&mut commands, meshes, stone_material.clone());
 }
 
 fn spawn_plane(
     commands: &mut Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>) {
+    material: Handle<StandardMaterial>) {
 
     commands.spawn_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Plane { size: 8.0 })),
-        material: materials.add(Color::rgb(0.5, 0.5, 0.5).into()),
-        transform: Transform::from_translation(Vec3::new(4.0, 0.0, 4.0)),
+        mesh: meshes.add(Mesh::from(shape::Plane { size: 5.0 })),
+        material: material,
+        transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
         ..Default::default()
     });
 }
@@ -51,9 +54,30 @@ fn spawn_creature(
     asset_server: Res<AssetServer>,
     commands: &mut Commands,
     model_path: &'static str,
+    material: Handle<StandardMaterial>,
 ) {
-    let scene = asset_server.load(model_path);
-    commands.spawn_scene(scene);
+    // let scene = asset_server.load(model_path);
+    // commands.spawn_scene(scene);
+    let creature: Handle<Mesh> = asset_server.load(model_path);
+    commands.spawn_bundle(PbrBundle {
+        transform: Transform::from_translation(Vec3::new(
+            1.0,
+            1.0,
+            1.0
+        )),
+        ..Default::default()
+    }).with_children(|parent| {
+        parent.spawn_bundle(PbrBundle {
+        mesh: creature,
+        material,
+        transform: {
+            let mut transform = Transform::from_translation(Vec3::new(-0.1, 0., 1.8));
+            transform.apply_non_uniform_scale(Vec3::new(0.2, 0.2, 0.2));
+            transform
+        },
+        ..Default::default()
+        });
+    });
 }
 
 fn spawn_light(commands: &mut Commands) {

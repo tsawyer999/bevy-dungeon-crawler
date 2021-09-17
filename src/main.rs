@@ -1,9 +1,9 @@
 mod camera;
 mod light;
 
+use bevy::{pbr::AmbientLight, prelude::*};
 use camera::spawn_camera;
 use light::Rotates;
-use bevy::{pbr::AmbientLight, prelude::*};
 
 fn main() {
     App::build()
@@ -14,32 +14,79 @@ fn main() {
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
-        .add_system(light::rotator_system.system())
-        .add_system(camera::pan_orbit_camera.system())
+        .add_system(light::rotator.system())
+        .add_system(camera::pan_camera.system())
+        .add_system(camera::orbit_camera.system())
+        .add_system(camera::scroll_camera.system())
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    spawn_creature(asset_server, &mut commands, "models/bat.gltf#Scene0");
-
-    spawn_camera(&mut commands);
-
-    spawn_light(&mut commands);
-}
-
-fn spawn_creature(
+fn setup(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
-    commands: &mut Commands,
-    model_path: &'static str,
 ) {
-    let scene = asset_server.load(model_path);
-    commands.spawn_scene(scene);
+    let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
+    let creature_mesh = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
+    let plane_mesh = meshes.add(Mesh::from(shape::Plane { size: 5.0 }));
+
+    spawn_mesh(
+        &mut commands,
+        Vec3::new(1.0, 0.0, 0.0),
+        creature_mesh.clone(),
+        stone_material.clone(),
+    );
+
+    spawn_mesh(
+        &mut commands,
+        Vec3::new(-1.0, 0.0, 0.0),
+        creature_mesh.clone(),
+        stone_material.clone(),
+    );
+
+    spawn_camera(
+        &mut commands,
+        Vec3::new(1.0, 1.0, 4.0),
+        Vec3::new(0.0, 0.0, 0.0),
+    );
+
+    spawn_light(&mut commands, Vec3::new(3.0, 5.0, 3.0));
+
+    spawn_plane(&mut commands, plane_mesh.clone(), stone_material.clone());
 }
 
-fn spawn_light(commands: &mut Commands) {
+fn spawn_plane(commands: &mut Commands, mesh: Handle<Mesh>, material: Handle<StandardMaterial>) {
+    commands.spawn_bundle(PbrBundle {
+        mesh,
+        material,
+        transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
+        ..Default::default()
+    });
+}
+
+fn spawn_mesh(
+    commands: &mut Commands,
+    position: Vec3,
+    mesh: Handle<Mesh>,
+    material: Handle<StandardMaterial>,
+) {
+    commands.spawn_bundle(PbrBundle {
+        mesh,
+        material,
+        transform: {
+            let mut transform = Transform::from_translation(position);
+            transform.scale = Vec3::new(0.01, 0.01, 0.01);
+            transform
+        },
+        ..Default::default()
+    });
+}
+
+fn spawn_light(commands: &mut Commands, position: Vec3) {
     commands
         .spawn_bundle(LightBundle {
-            transform: Transform::from_xyz(3.0, 5.0, 3.0),
+            transform: Transform::from_translation(position),
             ..Default::default()
         })
         .insert(Rotates);

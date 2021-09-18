@@ -21,11 +21,23 @@ pub fn update_ui_scale_factor(
     mut ui_state: ResMut<UiState>,
     mut egui_settings: ResMut<EguiSettings>
 ) {
+    let mut scale_factor: Option<f64> = Option::None;
+
     if keyboard_input.just_pressed(KeyCode::Slash) {
-        ui_state.scale_factor -= 0.1;
-        egui_settings.scale_factor = ui_state.scale_factor;
-    } else if keyboard_input.just_pressed(KeyCode::Asterisk) {
-        ui_state.scale_factor += 0.1;
+        scale_factor = Some(match scale_factor {
+            Some(factor) => factor - 0.1,
+            None => -0.1
+        });
+    }
+    if keyboard_input.just_pressed(KeyCode::Asterisk) {
+        scale_factor = Some(match scale_factor {
+            Some(factor) => factor + 0.1,
+            None => 0.1
+        });
+    }
+
+    if let Some(factor) = scale_factor {
+        ui_state.scale_factor = ui_state.scale_factor + factor;
         egui_settings.scale_factor = ui_state.scale_factor;
     }
 }

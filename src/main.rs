@@ -15,7 +15,7 @@ fn main() {
             color: Color::WHITE,
             brightness: 1.0 / 5.0f32,
         })
-        .init_resource::<UiState>()
+        .insert_resource(UiState { scale_factor: 1.0 })
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_plugin(PickingPlugin)

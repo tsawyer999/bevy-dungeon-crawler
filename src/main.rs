@@ -1,9 +1,9 @@
 mod camera;
-mod light;
+mod rotator_light;
 
 use bevy::{pbr::AmbientLight, prelude::*};
 use camera::spawn_camera;
-use light::Rotates;
+use rotator_light::Rotates;
 use bevy_mod_picking::*;
 
 fn main() {
@@ -19,7 +19,7 @@ fn main() {
         .add_plugin(HighlightablePickingPlugin)
         .add_plugin(InteractablePickingPlugin)
         .add_startup_system(setup.system())
-        .add_system(light::rotator.system())
+        .add_system(rotator_light::light.system())
         .add_system(camera::pan_camera.system())
         .add_system(camera::orbit_camera.system())
         .add_system(camera::scroll_camera.system())

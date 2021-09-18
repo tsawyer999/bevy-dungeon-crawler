@@ -7,6 +7,7 @@ mod gui;
 use bevy::{pbr::AmbientLight, prelude::*};
 use bevy_mod_picking::{HighlightablePickingPlugin, InteractablePickingPlugin, PickingPlugin};
 use bevy_egui::{EguiPlugin};
+use crate::gui::UiState;
 
 fn main() {
     App::build()
@@ -14,6 +15,7 @@ fn main() {
             color: Color::WHITE,
             brightness: 1.0 / 5.0f32,
         })
+        .init_resource::<UiState>()
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_plugin(PickingPlugin)
@@ -22,7 +24,7 @@ fn main() {
         .add_plugin(EguiPlugin)
         .add_startup_system(setup.system())
         .add_system(gui::update_ui_scale_factor.system())
-        .add_system(gui::ui_example2.system())
+        .add_system(gui::ui_example.system())
         .add_system(rotator::rotate.system())
         .add_system(camera::pan_camera.system())
         .add_system(camera::orbit_camera.system())

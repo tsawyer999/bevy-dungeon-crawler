@@ -1,10 +1,10 @@
 mod camera;
 mod light;
-mod rotator;
 mod mesh;
+mod rotator;
 
 use bevy::{pbr::AmbientLight, prelude::*};
-use bevy_mod_picking::{PickingPlugin, InteractablePickingPlugin, HighlightablePickingPlugin};
+use bevy_mod_picking::{HighlightablePickingPlugin, InteractablePickingPlugin, PickingPlugin};
 
 fn main() {
     App::build()
@@ -33,7 +33,11 @@ fn setup(
 ) {
     mesh::spawn_meshes(&mut commands, &mut materials, asset_server);
 
-    camera::spawn_camera(&mut commands, Vec3::new(1.0, 1.0, 4.0), Vec3::new(0.0, 0.0, 0.0));
+    camera::spawn_camera(
+        &mut commands,
+        Vec3::new(1.0, 1.0, 4.0),
+        Vec3::new(0.0, 0.0, 0.0),
+    );
 
     light::spawn_rotator_light(&mut commands, Vec3::new(3.0, 5.0, 3.0));
 

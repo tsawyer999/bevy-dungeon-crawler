@@ -1,14 +1,15 @@
-use bevy::ecs::prelude::{Commands, ResMut, Res};
-use bevy::asset::{Handle, Assets, AssetServer};
-use bevy::prelude::{Mesh, StandardMaterial, Transform, shape};
-use bevy::pbr::PbrBundle;
+use bevy::asset::{AssetServer, Assets, Handle};
+use bevy::ecs::prelude::{Commands, Res, ResMut};
 use bevy::math::Vec3;
-use bevy_mod_picking::PickableBundle;
+use bevy::pbr::PbrBundle;
+use bevy::prelude::{shape, Mesh, StandardMaterial, Transform};
 use bevy::render::prelude::Color;
+use bevy_mod_picking::PickableBundle;
 
-pub fn spawn_plane(commands: &mut Commands,
-                   meshes: &mut ResMut<Assets<Mesh>>,
-                   materials: &mut ResMut<Assets<StandardMaterial>>
+pub fn spawn_plane(
+    commands: &mut Commands,
+    meshes: &mut ResMut<Assets<Mesh>>,
+    materials: &mut ResMut<Assets<StandardMaterial>>,
 ) {
     let material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
     let mesh = meshes.add(Mesh::from(shape::Plane { size: 5.0 }));
@@ -27,21 +28,25 @@ pub fn spawn_mesh(
     mesh: Handle<Mesh>,
     material: Handle<StandardMaterial>,
 ) {
-    commands.spawn_bundle(PbrBundle {
-        mesh,
-        material,
-        transform: {
-            let mut transform = Transform::from_translation(position);
-            transform.scale = Vec3::new(0.01, 0.01, 0.01);
-            transform
-        },
-        ..Default::default()
-    }).insert_bundle(PickableBundle::default());
+    commands
+        .spawn_bundle(PbrBundle {
+            mesh,
+            material,
+            transform: {
+                let mut transform = Transform::from_translation(position);
+                transform.scale = Vec3::new(0.01, 0.01, 0.01);
+                transform
+            },
+            ..Default::default()
+        })
+        .insert_bundle(PickableBundle::default());
 }
 
-pub fn spawn_meshes(commands: &mut Commands,
-                    materials: &mut ResMut<Assets<StandardMaterial>>,
-                    asset_server: Res<AssetServer>) {
+pub fn spawn_meshes(
+    commands: &mut Commands,
+    materials: &mut ResMut<Assets<StandardMaterial>>,
+    asset_server: Res<AssetServer>,
+) {
     let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
     let creature_mesh = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
 

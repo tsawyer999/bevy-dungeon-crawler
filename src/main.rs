@@ -1,13 +1,13 @@
 mod camera;
+mod gui;
 mod light;
 mod mesh;
 mod rotator;
-mod gui;
 
-use bevy::{pbr::AmbientLight, prelude::*};
-use bevy_mod_picking::{HighlightablePickingPlugin, InteractablePickingPlugin, PickingPlugin};
-use bevy_egui::{EguiPlugin};
 use crate::gui::UiState;
+use bevy::{pbr::AmbientLight, prelude::*};
+use bevy_egui::EguiPlugin;
+use bevy_mod_picking::{HighlightablePickingPlugin, InteractablePickingPlugin, PickingPlugin};
 
 fn main() {
     App::build()
@@ -23,6 +23,7 @@ fn main() {
         .add_plugin(HighlightablePickingPlugin)
         .add_plugin(EguiPlugin)
         .add_startup_system(setup.system())
+        .add_startup_system(gui::load_assets.system())
         .add_system(gui::update_ui_scale_factor.system())
         .add_system(gui::ui_example.system())
         .add_system(rotator::rotate.system())

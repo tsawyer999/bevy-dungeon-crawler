@@ -22,7 +22,7 @@ fn main() {
         .add_plugin(EguiPlugin)
         .add_startup_system(setup.system())
         .add_system(gui::update_ui_scale_factor.system())
-        .add_system(gui::ui_example.system())
+        .add_system(gui::ui_example2.system())
         .add_system(rotator::rotate.system())
         .add_system(camera::pan_camera.system())
         .add_system(camera::orbit_camera.system())

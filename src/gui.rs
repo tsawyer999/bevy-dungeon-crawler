@@ -40,6 +40,12 @@ pub fn update_ui_scale_factor(
     }
 }
 
+pub fn ui_example2(egui_context: ResMut<EguiContext>) {
+    egui::Window::new("creature: Bat").show(egui_context.ctx(), |ui| {
+        ui.label("Bats are annoying creature hard to hit.");
+    });
+}
+
 pub fn ui_example(
     mut egui_ctx: ResMut<EguiContext>,
     mut ui_state: ResMut<UiState>,
@@ -48,7 +54,7 @@ pub fn ui_example(
     let mut load = false;
     let mut remove = false;
     let mut invert = false;
-
+/*
     egui::SidePanel::left("side_panel")
         .default_width(200.0)
         .show(egui_ctx.ctx(), |ui| {
@@ -82,7 +88,8 @@ pub fn ui_example(
                 );
             });
         });
-
+*/
+    /*
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         // The top panel is often a good place for a menu bar:
         egui::menu::bar(ui, |ui| {
@@ -92,8 +99,8 @@ pub fn ui_example(
                 }
             });
         });
-    });
-
+    });*/
+/*
     egui::CentralPanel::default().show(egui_ctx.ctx(), |ui| {
         ui.heading("Egui Template");
         ui.hyperlink("https://github.com/emilk/egui_template");
@@ -124,7 +131,8 @@ pub fn ui_example(
             ui.label("You can turn on resizing and scrolling if you like.");
             ui.label("You would normally chose either panels OR windows.");
         });
-
+    */
+/*
     if invert {
         ui_state.inverted = !ui_state.inverted;
     }
@@ -138,7 +146,7 @@ pub fn ui_example(
     }
     if remove {
         egui_ctx.remove_egui_texture(BEVY_TEXTURE_ID);
-    }
+    }*/
 }
 
 struct Painting {

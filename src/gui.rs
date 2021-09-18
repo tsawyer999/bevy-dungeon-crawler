@@ -9,6 +9,7 @@ struct Texture {
     path: &'static str
 }
 
+// ------------ Please help me to refactor this to an enum ------------
 const ARMOR_POINT: Texture = Texture {
     id: 1,
     path: "icons/ico_armor_point.png"
@@ -23,6 +24,8 @@ const TEXTURES: [Texture; 2] = [
     ARMOR_POINT,
     DAMAGE_POINT
 ];
+
+// --------------------------------------------------------------------
 
 pub struct UiState {
     pub scale_factor: f64,

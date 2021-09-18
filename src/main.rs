@@ -4,6 +4,7 @@ mod light;
 use bevy::{pbr::AmbientLight, prelude::*};
 use camera::spawn_camera;
 use light::Rotates;
+use bevy_mod_picking::*;
 
 fn main() {
     App::build()
@@ -13,6 +14,10 @@ fn main() {
         })
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
+        .add_plugin(PickingPlugin)
+        .add_plugin(InteractablePickingPlugin)
+        .add_plugin(HighlightablePickingPlugin)
+        .add_plugin(InteractablePickingPlugin)
         .add_startup_system(setup.system())
         .add_system(light::rotator.system())
         .add_system(camera::pan_camera.system())
@@ -80,7 +85,7 @@ fn spawn_mesh(
             transform
         },
         ..Default::default()
-    });
+    }).insert_bundle(PickableBundle::default());
 }
 
 fn spawn_light(commands: &mut Commands, position: Vec3) {

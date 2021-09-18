@@ -59,18 +59,24 @@ pub fn ui_example(
     egui::SidePanel::right("side_panel")
         .default_width(200.0)
         .show(egui_ctx.ctx(), |ui| {
-            ui.heading("Bat");
+            egui::Grid::new("some_unique_id").show(ui, |ui| {
+                ui.heading("Bat");
+                ui.end_row();
 
-            ui.horizontal(|ui| {
-                ui.label("HP");
+                ui.label("STR");
                 ui.label("4");
-            });
+                ui.end_row();
 
-            ui.horizontal(|ui| {
+                ui.label("HP 12321123123");
+                ui.label("4");
+                ui.end_row();
+
                 ui.label("MP");
                 ui.label("0");
+                ui.end_row();
             });
 
+/*
             ui.horizontal(|ui| {
                 ui.label("STR");
                 ui.label("4");
@@ -85,7 +91,7 @@ pub fn ui_example(
                 ui.label("DEF");
                 ui.label("1");
             });
-
+*/
             ui.add(egui::widgets::Image::new(
                 egui::TextureId::User(BEVY_TEXTURE_ID),
                 [256.0, 256.0],

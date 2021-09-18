@@ -1,10 +1,11 @@
 mod camera;
 mod rotator_light;
+mod mesh;
 
 use bevy::{pbr::AmbientLight, prelude::*};
 use camera::spawn_camera;
 use rotator_light::Rotates;
-use bevy_mod_picking::*;
+use bevy_mod_picking::{PickingPlugin, InteractablePickingPlugin, HighlightablePickingPlugin};
 
 fn main() {
     App::build()
@@ -17,7 +18,6 @@ fn main() {
         .add_plugin(PickingPlugin)
         .add_plugin(InteractablePickingPlugin)
         .add_plugin(HighlightablePickingPlugin)
-        .add_plugin(InteractablePickingPlugin)
         .add_startup_system(setup.system())
         .add_system(rotator_light::light.system())
         .add_system(camera::pan_camera.system())
@@ -36,14 +36,14 @@ fn setup(
     let creature_mesh = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
     let plane_mesh = meshes.add(Mesh::from(shape::Plane { size: 5.0 }));
 
-    spawn_mesh(
+    mesh::spawn_mesh(
         &mut commands,
         Vec3::new(1.0, 0.0, 0.0),
         creature_mesh.clone(),
         stone_material.clone(),
     );
 
-    spawn_mesh(
+    mesh::spawn_mesh(
         &mut commands,
         Vec3::new(-1.0, 0.0, 0.0),
         creature_mesh.clone(),
@@ -58,34 +58,7 @@ fn setup(
 
     spawn_light(&mut commands, Vec3::new(3.0, 5.0, 3.0));
 
-    spawn_plane(&mut commands, plane_mesh.clone(), stone_material.clone());
-}
-
-fn spawn_plane(commands: &mut Commands, mesh: Handle<Mesh>, material: Handle<StandardMaterial>) {
-    commands.spawn_bundle(PbrBundle {
-        mesh,
-        material,
-        transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
-        ..Default::default()
-    });
-}
-
-fn spawn_mesh(
-    commands: &mut Commands,
-    position: Vec3,
-    mesh: Handle<Mesh>,
-    material: Handle<StandardMaterial>,
-) {
-    commands.spawn_bundle(PbrBundle {
-        mesh,
-        material,
-        transform: {
-            let mut transform = Transform::from_translation(position);
-            transform.scale = Vec3::new(0.01, 0.01, 0.01);
-            transform
-        },
-        ..Default::default()
-    }).insert_bundle(PickableBundle::default());
+    mesh::spawn_plane(&mut commands, plane_mesh.clone(), stone_material.clone());
 }
 
 fn spawn_light(commands: &mut Commands, position: Vec3) {

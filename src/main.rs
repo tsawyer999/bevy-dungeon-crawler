@@ -4,7 +4,6 @@ mod rotator;
 mod mesh;
 
 use bevy::{pbr::AmbientLight, prelude::*};
-use camera::spawn_camera;
 use bevy_mod_picking::{PickingPlugin, InteractablePickingPlugin, HighlightablePickingPlugin};
 
 fn main() {
@@ -32,31 +31,11 @@ fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
 ) {
-    let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
-    let creature_mesh = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
+    mesh::spawn_meshes(&mut commands, &mut materials, asset_server);
 
-    mesh::spawn_mesh(
-        &mut commands,
-        Vec3::new(1.0, 0.0, 0.0),
-        creature_mesh.clone(),
-        stone_material.clone(),
-    );
-
-    mesh::spawn_mesh(
-        &mut commands,
-        Vec3::new(-1.0, 0.0, 0.0),
-        creature_mesh.clone(),
-        stone_material.clone(),
-    );
-
-    spawn_camera(
-        &mut commands,
-        Vec3::new(1.0, 1.0, 4.0),
-        Vec3::new(0.0, 0.0, 0.0),
-    );
+    camera::spawn_camera(&mut commands, Vec3::new(1.0, 1.0, 4.0), Vec3::new(0.0, 0.0, 0.0));
 
     light::spawn_rotator_light(&mut commands, Vec3::new(3.0, 5.0, 3.0));
 
-    let plane_mesh = meshes.add(Mesh::from(shape::Plane { size: 5.0 }));
-    mesh::spawn_plane(&mut commands, plane_mesh.clone(), stone_material.clone());
+    mesh::spawn_plane(&mut commands, &mut meshes, &mut materials);
 }

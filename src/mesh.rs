@@ -1,11 +1,18 @@
-use bevy::ecs::prelude::Commands;
-use bevy::asset::Handle;
-use bevy::prelude::{Mesh, StandardMaterial, Transform};
+use bevy::ecs::prelude::{Commands, ResMut, Res};
+use bevy::asset::{Handle, Assets, AssetServer};
+use bevy::prelude::{Mesh, StandardMaterial, Transform, shape};
 use bevy::pbr::PbrBundle;
 use bevy::math::Vec3;
 use bevy_mod_picking::PickableBundle;
+use bevy::render::prelude::Color;
 
-pub fn spawn_plane(commands: &mut Commands, mesh: Handle<Mesh>, material: Handle<StandardMaterial>) {
+pub fn spawn_plane(commands: &mut Commands,
+                   meshes: &mut ResMut<Assets<Mesh>>,
+                   materials: &mut ResMut<Assets<StandardMaterial>>
+) {
+    let material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
+    let mesh = meshes.add(Mesh::from(shape::Plane { size: 5.0 }));
+
     commands.spawn_bundle(PbrBundle {
         mesh,
         material,
@@ -30,4 +37,25 @@ pub fn spawn_mesh(
         },
         ..Default::default()
     }).insert_bundle(PickableBundle::default());
+}
+
+pub fn spawn_meshes(commands: &mut Commands,
+                    materials: &mut ResMut<Assets<StandardMaterial>>,
+                    asset_server: Res<AssetServer>) {
+    let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
+    let creature_mesh = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
+
+    spawn_mesh(
+        commands,
+        Vec3::new(1.0, 0.0, 0.0),
+        creature_mesh.clone(),
+        stone_material.clone(),
+    );
+
+    spawn_mesh(
+        commands,
+        Vec3::new(-1.0, 0.0, 0.0),
+        creature_mesh.clone(),
+        stone_material.clone(),
+    );
 }

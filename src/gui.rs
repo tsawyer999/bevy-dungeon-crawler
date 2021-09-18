@@ -49,7 +49,7 @@ pub fn ui_example(
     let mut remove = false;
     let mut invert = false;
 
-    egui::SidePanel::left("side_panel")
+    egui::SidePanel::right("side_panel")
         .default_width(200.0)
         .show(egui_ctx.ctx(), |ui| {
             ui.heading("Side Panel");
@@ -93,7 +93,7 @@ pub fn ui_example(
             });
         });
     });
-
+/*
     egui::CentralPanel::default().show(egui_ctx.ctx(), |ui| {
         ui.heading("Egui Template");
         ui.hyperlink("https://github.com/emilk/egui_template");
@@ -115,7 +115,8 @@ pub fn ui_example(
             ui_state.painting.ui_content(ui);
         });
     });
-
+*/
+    /*
     egui::Window::new("Window")
         .scroll(true)
         .show(egui_ctx.ctx(), |ui| {
@@ -124,7 +125,7 @@ pub fn ui_example(
             ui.label("You can turn on resizing and scrolling if you like.");
             ui.label("You would normally chose either panels OR windows.");
         });
-
+*/
     if invert {
         ui_state.inverted = !ui_state.inverted;
     }

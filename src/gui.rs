@@ -96,13 +96,23 @@ pub fn ui_example(egui_ctx: ResMut<EguiContext>) {
                 ui.end_row();
 
                 // Add ALT to image
-                ui.image(egui::TextureId::User(ARMOR_POINT.id), [25.0, 25.0]);
+                ui.image(egui::TextureId::User(ARMOR_POINT.id), [25.0, 25.0])
+                .on_hover_text("armor point");
                 ui.label("44");
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(DAMAGE_POINT.id), [25.0, 25.0]);
+                ui.image(egui::TextureId::User(DAMAGE_POINT.id), [25.0, 25.0])
+                    .on_hover_text("damage point");
                 ui.label("2-45");
                 ui.end_row();
+                ui.end_row();
+
+                ui.label("Description");
+                ui.end_row();
+
+                ui.label("Bat are annoying creature hard to hit.");
+                ui.end_row();
+
             });
         });
 }

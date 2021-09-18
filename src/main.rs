@@ -2,9 +2,11 @@ mod camera;
 mod light;
 mod mesh;
 mod rotator;
+mod gui;
 
 use bevy::{pbr::AmbientLight, prelude::*};
 use bevy_mod_picking::{HighlightablePickingPlugin, InteractablePickingPlugin, PickingPlugin};
+use bevy_egui::{EguiPlugin};
 
 fn main() {
     App::build()
@@ -17,7 +19,10 @@ fn main() {
         .add_plugin(PickingPlugin)
         .add_plugin(InteractablePickingPlugin)
         .add_plugin(HighlightablePickingPlugin)
+        .add_plugin(EguiPlugin)
         .add_startup_system(setup.system())
+        .add_system(gui::update_ui_scale_factor.system())
+        .add_system(gui::ui_example.system())
         .add_system(rotator::rotate.system())
         .add_system(camera::pan_camera.system())
         .add_system(camera::orbit_camera.system())

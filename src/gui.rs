@@ -62,9 +62,14 @@ pub fn ui_example(egui_ctx: ResMut<EguiContext>) {
                 ui.heading("Bat");
                 ui.end_row();
 
+                ui.image(egui::TextureId::User(icons::ICO_TEAM_ENEMY.id), [ICON_SIZE, ICON_SIZE])
+                    .on_hover_text("enemy team");
+                ui.label("enemy team");
+                ui.end_row();
+
                 ui.image(egui::TextureId::User(icons::ICO_STAT_STRENGTH.id), [ICON_SIZE, ICON_SIZE])
                     .on_hover_text("strength point");
-                ui.label("4");
+                ui.label("2");
                 ui.end_row();
 
                 ui.image(egui::TextureId::User(icons::ICO_HEALTH_POINT.id), [ICON_SIZE, ICON_SIZE])
@@ -86,9 +91,8 @@ pub fn ui_example(egui_ctx: ResMut<EguiContext>) {
                     .on_hover_text("damage point");
                 ui.label("2-45");
                 ui.end_row();
-                ui.end_row();
 
-                ui.label("Description");
+                ui.heading("Description");
                 ui.end_row();
 
                 ui.label("Bat are annoying creature hard to hit.");

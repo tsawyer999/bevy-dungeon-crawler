@@ -3,29 +3,8 @@ use bevy::ecs::prelude::{Res, ResMut};
 use bevy::input::keyboard::KeyCode;
 use bevy::input::Input;
 use bevy_egui::{egui, EguiContext, EguiSettings};
-
-struct Texture {
-    id: u64,
-    path: &'static str
-}
-
-// ------------ Please help me to refactor this to an enum ------------
-const ARMOR_POINT: Texture = Texture {
-    id: 1,
-    path: "icons/ico_armor_point.png"
-};
-
-const DAMAGE_POINT: Texture = Texture {
-    id: 2,
-    path: "icons/ico_damage_point.png"
-};
-
-const TEXTURES: [Texture; 2] = [
-    ARMOR_POINT,
-    DAMAGE_POINT
-];
-
-// --------------------------------------------------------------------
+use crate::icons;
+use crate::icons::{TEXTURES, ICON_SIZE};
 
 pub struct UiState {
     pub scale_factor: f64,
@@ -83,25 +62,27 @@ pub fn ui_example(egui_ctx: ResMut<EguiContext>) {
                 ui.heading("Bat");
                 ui.end_row();
 
-                ui.label("STR");
+                ui.image(egui::TextureId::User(icons::ICO_STAT_STRENGTH.id), [ICON_SIZE, ICON_SIZE])
+                    .on_hover_text("strength point");
                 ui.label("4");
                 ui.end_row();
 
-                ui.label("HP 12321123123");
+                ui.image(egui::TextureId::User(icons::ICO_HEALTH_POINT.id), [ICON_SIZE, ICON_SIZE])
+                    .on_hover_text("health point");
                 ui.label("4");
                 ui.end_row();
 
-                ui.label("MP");
+                ui.image(egui::TextureId::User(icons::ICO_MANA_POINT.id), [ICON_SIZE, ICON_SIZE])
+                    .on_hover_text("mana point");
                 ui.label("0");
                 ui.end_row();
 
-                // Add ALT to image
-                ui.image(egui::TextureId::User(ARMOR_POINT.id), [25.0, 25.0])
-                .on_hover_text("armor point");
+                ui.image(egui::TextureId::User(icons::ICO_ARMOR_POINT.id), [ICON_SIZE, ICON_SIZE])
+                    .on_hover_text("armor point");
                 ui.label("44");
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(DAMAGE_POINT.id), [25.0, 25.0])
+                ui.image(egui::TextureId::User(icons::ICO_DAMAGE_POINT.id), [ICON_SIZE, ICON_SIZE])
                     .on_hover_text("damage point");
                 ui.label("2-45");
                 ui.end_row();

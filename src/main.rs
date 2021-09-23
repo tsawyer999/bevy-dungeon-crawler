@@ -3,6 +3,7 @@ mod gui;
 mod light;
 mod mesh;
 mod rotator;
+mod icons;
 
 use crate::gui::UiState;
 use bevy::{pbr::AmbientLight, prelude::*};

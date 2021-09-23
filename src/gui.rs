@@ -92,6 +92,7 @@ pub fn ui_example(egui_ctx: ResMut<EguiContext>) {
                 ui.label("2-45");
                 ui.end_row();
 
+                ui.end_row();
                 ui.heading("Description");
                 ui.end_row();
 

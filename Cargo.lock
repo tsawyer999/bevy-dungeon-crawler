@@ -1395,7 +1395,6 @@ dependencies = [
  "bevy",
  "bevy_egui",
  "bevy_mod_picking",
- "lazy_static",
  "rand",
 ]
 

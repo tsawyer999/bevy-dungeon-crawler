@@ -1,4 +1,4 @@
-use crate::element::{Element, EMPTY_ELEMENT};
+use crate::element::{Element};
 use crate::icons;
 use crate::icons::{ICON_SIZE, TEXTURES};
 use bevy::app::{AppBuilder, Plugin};
@@ -15,13 +15,13 @@ pub struct UiState {
 }
 
 pub struct GuiSelection {
-    pub selected_element: Element,
+    pub selected_element: Option<Element>
 }
 
 impl Default for GuiSelection {
     fn default() -> Self {
         GuiSelection {
-            selected_element: EMPTY_ELEMENT.clone(),
+            selected_element: None,
         }
     }
 }
@@ -72,10 +72,10 @@ fn select_element(
     if let Some(picking_camera) = picking_camera_query.iter().last() {
         if let Some((element_entity, _intersection)) = picking_camera.intersect_top() {
             if let Ok(element) = elements_query.get(element_entity) {
-                selection.selected_element = element.clone();
+                selection.selected_element = Some(*element);
             }
         } else {
-            selection.selected_element = EMPTY_ELEMENT.clone();
+            selection.selected_element = None;
         }
     }
 }
@@ -94,73 +94,71 @@ fn display_menu(egui_ctx: ResMut<EguiContext>) {
 
 fn display_element_panel(egui_ctx: ResMut<EguiContext>,
                          selection: ResMut<GuiSelection>) {
-    if selection.selected_element.name == "" {
-        return;
-    }
+    if let Some(element) = selection.selected_element {
+        egui::SidePanel::right("element_panel")
+            .default_width(200.0)
+            .show(egui_ctx.ctx(), |ui| {
+                egui::Grid::new("some_unique_id").show(ui, |ui| {
+                    ui.heading(element.name);
+                    ui.end_row();
 
-    egui::SidePanel::right("element_panel")
-        .default_width(200.0)
-        .show(egui_ctx.ctx(), |ui| {
-            egui::Grid::new("some_unique_id").show(ui, |ui| {
-                ui.heading(selection.selected_element.name);
-                ui.end_row();
+                    ui.image(
+                        egui::TextureId::User(icons::ICO_TEAM_ENEMY.id),
+                        [ICON_SIZE, ICON_SIZE],
+                    )
+                        .on_hover_text("enemy team");
+                    ui.label(element.team);
+                    ui.end_row();
 
-                ui.image(
-                    egui::TextureId::User(icons::ICO_TEAM_ENEMY.id),
-                    [ICON_SIZE, ICON_SIZE],
-                )
-                .on_hover_text("enemy team");
-                ui.label(selection.selected_element.team);
-                ui.end_row();
+                    ui.image(
+                        egui::TextureId::User(icons::ICO_STAT_STRENGTH.id),
+                        [ICON_SIZE, ICON_SIZE],
+                    )
+                        .on_hover_text("strength point");
+                    ui.label(format!("{0}", element.strength));
+                    ui.end_row();
 
-                ui.image(
-                    egui::TextureId::User(icons::ICO_STAT_STRENGTH.id),
-                    [ICON_SIZE, ICON_SIZE],
-                )
-                .on_hover_text("strength point");
-                ui.label(format!("{0}", selection.selected_element.strength));
-                ui.end_row();
+                    ui.image(
+                        egui::TextureId::User(icons::ICO_HEALTH_POINT.id),
+                        [ICON_SIZE, ICON_SIZE],
+                    )
+                        .on_hover_text("health point");
+                    ui.label(format!("{0}", element.health));
+                    ui.end_row();
 
-                ui.image(
-                    egui::TextureId::User(icons::ICO_HEALTH_POINT.id),
-                    [ICON_SIZE, ICON_SIZE],
-                )
-                .on_hover_text("health point");
-                ui.label(format!("{0}", selection.selected_element.health));
-                ui.end_row();
+                    ui.image(
+                        egui::TextureId::User(icons::ICO_MANA_POINT.id),
+                        [ICON_SIZE, ICON_SIZE],
+                    )
+                        .on_hover_text("mana point");
+                    ui.label(format!("{0}", element.mana));
+                    ui.end_row();
 
-                ui.image(
-                    egui::TextureId::User(icons::ICO_MANA_POINT.id),
-                    [ICON_SIZE, ICON_SIZE],
-                )
-                .on_hover_text("mana point");
-                ui.label(format!("{0}", selection.selected_element.mana));
-                ui.end_row();
+                    ui.image(
+                        egui::TextureId::User(icons::ICO_ARMOR_POINT.id),
+                        [ICON_SIZE, ICON_SIZE],
+                    )
+                        .on_hover_text("armor point");
+                    ui.label(format!("{0}", element.armor));
+                    ui.end_row();
 
-                ui.image(
-                    egui::TextureId::User(icons::ICO_ARMOR_POINT.id),
-                    [ICON_SIZE, ICON_SIZE],
-                )
-                .on_hover_text("armor point");
-                ui.label(format!("{0}", selection.selected_element.armor));
-                ui.end_row();
+                    ui.image(
+                        egui::TextureId::User(icons::ICO_DAMAGE_POINT.id),
+                        [ICON_SIZE, ICON_SIZE],
+                    )
+                        .on_hover_text("damage point");
+                    ui.label(format!("{0}-{1}", element.min_damage, element.max_damage));
+                    ui.end_row();
 
-                ui.image(
-                    egui::TextureId::User(icons::ICO_DAMAGE_POINT.id),
-                    [ICON_SIZE, ICON_SIZE],
-                )
-                .on_hover_text("damage point");
-                ui.label(format!("{0}-{1}", selection.selected_element.min_damage, selection.selected_element.max_damage));
-                ui.end_row();
+                    ui.end_row();
+                    ui.heading("Description");
+                    ui.end_row();
 
-                ui.end_row();
-                ui.heading("Description");
-                ui.end_row();
-
-                ui.label(selection.selected_element.description);
-                ui.end_row();
+                    ui.label(element.description);
+                    ui.end_row();
+                });
             });
-        });
+    };
 }
 
 pub struct GuiPlugin;

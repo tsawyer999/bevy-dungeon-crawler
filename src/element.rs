@@ -13,22 +13,3 @@ pub struct Element {
     pub max_damage: i32,
     pub position: Vec3,
 }
-
-lazy_static! {
-    pub static ref EMPTY_ELEMENT: Element = {
-        let element = Element {
-            name: "",
-            description: "",
-            team: "",
-            strength: 0,
-            health: 0,
-            mana: 0,
-            armor: 0,
-            min_damage: 0,
-            max_damage: 0,
-            position: Vec3::new(0.0, 0.0, 0.0)
-        };
-
-        return element;
-    };
-}

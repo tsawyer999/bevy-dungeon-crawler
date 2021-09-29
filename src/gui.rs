@@ -169,24 +169,27 @@ fn display_description(ui: &mut Ui, element: Element) {
 
 fn display_element_panel(egui_ctx: ResMut<EguiContext>,
                          selection: ResMut<GuiSelection>) {
-    if let Some(element) = selection.selected_element {
-        egui::SidePanel::right("element_panel")
-            .default_width(200.0)
-            .show(egui_ctx.ctx(), |ui| {
-                egui::Grid::new("info_grid").show(ui, |ui| {
-                    display_name(ui, element);
-
-                    display_team(ui, element);
-                    display_strength(ui, element);
-                    display_health(ui, element);
-                    display_mana(ui, element);
-                    display_damage(ui, element);
-                    display_armor(ui, element);
-
-                    display_description(ui, element);
-                });
-            });
+    let element = match selection.selected_element {
+        Some(e) => e,
+        None => return
     };
+
+    egui::SidePanel::right("element_panel")
+        .default_width(200.0)
+        .show(egui_ctx.ctx(), |ui| {
+            egui::Grid::new("info_grid").show(ui, |ui| {
+                display_name(ui, element);
+
+                display_team(ui, element);
+                display_strength(ui, element);
+                display_health(ui, element);
+                display_mana(ui, element);
+                display_damage(ui, element);
+                display_armor(ui, element);
+
+                display_description(ui, element);
+            });
+        });
 }
 
 pub struct GuiPlugin;

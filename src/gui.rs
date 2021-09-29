@@ -92,7 +92,12 @@ fn display_menu(egui_ctx: ResMut<EguiContext>) {
     });
 }
 
-fn display_element_panel(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection>) {
+fn display_element_panel(egui_ctx: ResMut<EguiContext>,
+                         selection: ResMut<GuiSelection>) {
+    if selection.selected_element.name == "" {
+        return;
+    }
+
     egui::SidePanel::right("element_panel")
         .default_width(200.0)
         .show(egui_ctx.ctx(), |ui| {

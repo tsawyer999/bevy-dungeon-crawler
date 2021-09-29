@@ -69,9 +69,6 @@ fn select_element(
         return;
     }
 
-    // match selection.selected_element {
-    //
-    // }
     match selection.selected_element {
         Some(x) => println!("selection: {0}", x.name),
         None => println!("selection: none")
@@ -85,7 +82,7 @@ fn select_element(
                 // selection.selected_element = Some(element_entity);
             }
         } else {
-            // selection.entity = None;
+            selection.selected_element = None;
         }
     }
 }

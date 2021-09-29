@@ -35,7 +35,6 @@ pub fn spawn_element(
             transform: Transform::from_translation(element.position.clone()),
             ..Default::default()
         })
-        .insert(element)
         .with_children(|parent| {
             parent.spawn_bundle(PbrBundle {
                 mesh,
@@ -46,7 +45,8 @@ pub fn spawn_element(
                     transform
                 },
                 ..Default::default()
-            }).insert_bundle(PickableBundle::default());
+            }).insert_bundle(PickableBundle::default())
+                .insert(element);
         });
 }
 

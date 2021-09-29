@@ -80,11 +80,7 @@ fn select_element(
     }
 }
 
-fn display_menu() {
-    
-}
-
-fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection>) {
+fn display_menu(egui_ctx: ResMut<EguiContext>) {
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         egui::menu::bar(ui, |ui| {
             egui::menu::menu(ui, "File", |ui| {
@@ -94,8 +90,10 @@ fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection
             });
         });
     });
+}
 
-    egui::SidePanel::right("element_info_panel")
+fn display_element_panel(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection>) {
+    egui::SidePanel::right("element_panel")
         .default_width(200.0)
         .show(egui_ctx.ctx(), |ui| {
             egui::Grid::new("some_unique_id").show(ui, |ui| {
@@ -164,7 +162,8 @@ pub struct GuiPlugin;
 impl Plugin for GuiPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(update_ui_scale_factor.system())
-            .add_system(display_element.system())
+            .add_system(display_menu.system())
+            .add_system(display_element_panel.system())
             .add_system(select_element.system())
             .init_resource::<GuiSelection>();
     }

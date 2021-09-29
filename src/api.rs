@@ -5,7 +5,7 @@ pub fn get_elements() -> [Element; 2] {
     return [
         Element {
             name: "hating bat",
-            description: "annoying",
+            description: "Bat are annoying creature hard to hit.",
             team: "enemy",
             strength: 4,
             health: 8,
@@ -17,7 +17,7 @@ pub fn get_elements() -> [Element; 2] {
         },
         Element {
             name: "loving bat",
-            description: "annoying",
+            description: "Bat are annoying creature hard to hit.",
             team: "friends",
             strength: 4,
             health: 8,

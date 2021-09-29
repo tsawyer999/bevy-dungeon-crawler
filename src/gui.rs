@@ -71,16 +71,17 @@ fn select_element(
 
     if let Some(picking_camera) = picking_camera_query.iter().last() {
         if let Some((element_entity, _intersection)) = picking_camera.intersect_top() {
-            println!("200");
             if let Ok(element) = elements_query.get(element_entity) {
-                println!("300");
-                println!("{0}", element.name);
                 selection.selected_element = element.clone();
             }
         } else {
             selection.selected_element = EMPTY_ELEMENT.clone();
         }
     }
+}
+
+fn display_menu() {
+    
 }
 
 fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection>) {
@@ -106,7 +107,7 @@ fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection
                     [ICON_SIZE, ICON_SIZE],
                 )
                 .on_hover_text("enemy team");
-                ui.label("enemy team");
+                ui.label(selection.selected_element.team);
                 ui.end_row();
 
                 ui.image(
@@ -114,7 +115,7 @@ fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection
                     [ICON_SIZE, ICON_SIZE],
                 )
                 .on_hover_text("strength point");
-                ui.label("2");
+                ui.label(format!("{0}", selection.selected_element.strength));
                 ui.end_row();
 
                 ui.image(
@@ -122,7 +123,7 @@ fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection
                     [ICON_SIZE, ICON_SIZE],
                 )
                 .on_hover_text("health point");
-                ui.label("4");
+                ui.label(format!("{0}", selection.selected_element.health));
                 ui.end_row();
 
                 ui.image(
@@ -130,7 +131,7 @@ fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection
                     [ICON_SIZE, ICON_SIZE],
                 )
                 .on_hover_text("mana point");
-                ui.label("0");
+                ui.label(format!("{0}", selection.selected_element.mana));
                 ui.end_row();
 
                 ui.image(
@@ -138,7 +139,7 @@ fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection
                     [ICON_SIZE, ICON_SIZE],
                 )
                 .on_hover_text("armor point");
-                ui.label("44");
+                ui.label(format!("{0}", selection.selected_element.armor));
                 ui.end_row();
 
                 ui.image(
@@ -146,14 +147,14 @@ fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection
                     [ICON_SIZE, ICON_SIZE],
                 )
                 .on_hover_text("damage point");
-                ui.label("2-45");
+                ui.label(format!("{0}-{1}", selection.selected_element.min_damage, selection.selected_element.max_damage));
                 ui.end_row();
 
                 ui.end_row();
                 ui.heading("Description");
                 ui.end_row();
 
-                ui.label("Bat are annoying creature hard to hit.");
+                ui.label(selection.selected_element.description);
                 ui.end_row();
             });
         });

@@ -1,13 +1,16 @@
+#[macro_use]
+extern crate lazy_static;
+
+mod api;
 mod camera;
+mod element;
 mod gui;
+mod icons;
 mod light;
 mod mesh;
 mod rotator;
-mod icons;
-mod element;
-mod api;
 
-use crate::gui::{UiState, GuiPlugin};
+use crate::gui::{GuiPlugin, UiState};
 use bevy::{pbr::AmbientLight, prelude::*};
 use bevy_egui::EguiPlugin;
 use bevy_mod_picking::{HighlightablePickingPlugin, InteractablePickingPlugin, PickingPlugin};

@@ -1,11 +1,11 @@
+use crate::api;
+use crate::element::Element;
 use bevy::asset::{AssetServer, Assets, Handle};
 use bevy::ecs::prelude::{Commands, Res, ResMut};
 use bevy::math::Vec3;
 use bevy::pbr::PbrBundle;
-use bevy::prelude::{shape, Mesh, StandardMaterial, Transform, BuildChildren};
+use bevy::prelude::{shape, BuildChildren, Mesh, StandardMaterial, Transform};
 use bevy::render::prelude::Color;
-use crate::api;
-use crate::element::Element;
 use bevy_mod_picking::PickableBundle;
 
 pub fn spawn_plane(
@@ -36,16 +36,18 @@ pub fn spawn_element(
             ..Default::default()
         })
         .with_children(|parent| {
-            parent.spawn_bundle(PbrBundle {
-                mesh,
-                material,
-                transform: {
-                    let mut transform = Transform::from_translation(Vec3::new(0.0, 0.0, 0.0));
-                    transform.scale = Vec3::new(0.01, 0.01, 0.01);
-                    transform
-                },
-                ..Default::default()
-            }).insert_bundle(PickableBundle::default())
+            parent
+                .spawn_bundle(PbrBundle {
+                    mesh,
+                    material,
+                    transform: {
+                        let mut transform = Transform::from_translation(Vec3::new(0.0, 0.0, 0.0));
+                        transform.scale = Vec3::new(0.01, 0.01, 0.01);
+                        transform
+                    },
+                    ..Default::default()
+                })
+                .insert_bundle(PickableBundle::default())
                 .insert(element);
         });
 }

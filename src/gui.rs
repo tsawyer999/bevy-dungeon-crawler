@@ -1,27 +1,27 @@
+use crate::element::{Element, EMPTY_ELEMENT};
+use crate::icons;
+use crate::icons::{ICON_SIZE, TEXTURES};
+use bevy::app::{AppBuilder, Plugin};
 use bevy::asset::AssetServer;
-use bevy::ecs::prelude::{Res, ResMut, Query, IntoSystem};
+use bevy::ecs::prelude::{IntoSystem, Query, Res, ResMut};
 use bevy::input::keyboard::KeyCode;
+use bevy::input::mouse::MouseButton;
 use bevy::input::Input;
 use bevy_egui::{egui, EguiContext, EguiSettings};
-use bevy::input::mouse::MouseButton;
 use bevy_mod_picking::PickingCamera;
-use bevy::app::{Plugin, AppBuilder};
-use crate::icons;
-use crate::icons::{TEXTURES, ICON_SIZE};
-use crate::element::Element;
 
 pub struct UiState {
     pub scale_factor: f64,
 }
 
 pub struct GuiSelection {
-    pub selected_element: Option<Element>
+    pub selected_element: Element,
 }
 
 impl Default for GuiSelection {
     fn default() -> Self {
         GuiSelection {
-            selected_element: Option::None
+            selected_element: EMPTY_ELEMENT.clone(),
         }
     }
 }
@@ -69,25 +69,21 @@ fn select_element(
         return;
     }
 
-    match selection.selected_element {
-        Some(x) => println!("selection: {0}", x.name),
-        None => println!("selection: none")
-    }
     if let Some(picking_camera) = picking_camera_query.iter().last() {
         if let Some((element_entity, _intersection)) = picking_camera.intersect_top() {
             println!("200");
             if let Ok(element) = elements_query.get(element_entity) {
                 println!("300");
                 println!("{0}", element.name);
-                // selection.selected_element = Some(element_entity);
+                selection.selected_element = element.clone();
             }
         } else {
-            selection.selected_element = None;
+            selection.selected_element = EMPTY_ELEMENT.clone();
         }
     }
 }
 
-fn ui_example(egui_ctx: ResMut<EguiContext>) {
+fn display_element(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection>) {
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         egui::menu::bar(ui, |ui| {
             egui::menu::menu(ui, "File", |ui| {
@@ -98,40 +94,58 @@ fn ui_example(egui_ctx: ResMut<EguiContext>) {
         });
     });
 
-    egui::SidePanel::right("info_panel")
+    egui::SidePanel::right("element_info_panel")
         .default_width(200.0)
         .show(egui_ctx.ctx(), |ui| {
             egui::Grid::new("some_unique_id").show(ui, |ui| {
-                ui.heading("Bat");
+                ui.heading(selection.selected_element.name);
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(icons::ICO_TEAM_ENEMY.id), [ICON_SIZE, ICON_SIZE])
-                    .on_hover_text("enemy team");
+                ui.image(
+                    egui::TextureId::User(icons::ICO_TEAM_ENEMY.id),
+                    [ICON_SIZE, ICON_SIZE],
+                )
+                .on_hover_text("enemy team");
                 ui.label("enemy team");
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(icons::ICO_STAT_STRENGTH.id), [ICON_SIZE, ICON_SIZE])
-                    .on_hover_text("strength point");
+                ui.image(
+                    egui::TextureId::User(icons::ICO_STAT_STRENGTH.id),
+                    [ICON_SIZE, ICON_SIZE],
+                )
+                .on_hover_text("strength point");
                 ui.label("2");
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(icons::ICO_HEALTH_POINT.id), [ICON_SIZE, ICON_SIZE])
-                    .on_hover_text("health point");
+                ui.image(
+                    egui::TextureId::User(icons::ICO_HEALTH_POINT.id),
+                    [ICON_SIZE, ICON_SIZE],
+                )
+                .on_hover_text("health point");
                 ui.label("4");
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(icons::ICO_MANA_POINT.id), [ICON_SIZE, ICON_SIZE])
-                    .on_hover_text("mana point");
+                ui.image(
+                    egui::TextureId::User(icons::ICO_MANA_POINT.id),
+                    [ICON_SIZE, ICON_SIZE],
+                )
+                .on_hover_text("mana point");
                 ui.label("0");
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(icons::ICO_ARMOR_POINT.id), [ICON_SIZE, ICON_SIZE])
-                    .on_hover_text("armor point");
+                ui.image(
+                    egui::TextureId::User(icons::ICO_ARMOR_POINT.id),
+                    [ICON_SIZE, ICON_SIZE],
+                )
+                .on_hover_text("armor point");
                 ui.label("44");
                 ui.end_row();
 
-                ui.image(egui::TextureId::User(icons::ICO_DAMAGE_POINT.id), [ICON_SIZE, ICON_SIZE])
-                    .on_hover_text("damage point");
+                ui.image(
+                    egui::TextureId::User(icons::ICO_DAMAGE_POINT.id),
+                    [ICON_SIZE, ICON_SIZE],
+                )
+                .on_hover_text("damage point");
                 ui.label("2-45");
                 ui.end_row();
 
@@ -149,7 +163,7 @@ pub struct GuiPlugin;
 impl Plugin for GuiPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(update_ui_scale_factor.system())
-            .add_system(ui_example.system())
+            .add_system(display_element.system())
             .add_system(select_element.system())
             .init_resource::<GuiSelection>();
     }

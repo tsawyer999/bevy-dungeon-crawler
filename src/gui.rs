@@ -9,6 +9,7 @@ use bevy::input::mouse::MouseButton;
 use bevy::input::Input;
 use bevy_egui::{egui, EguiContext, EguiSettings};
 use bevy_mod_picking::PickingCamera;
+use bevy_egui::egui::Ui;
 
 pub struct UiState {
     pub scale_factor: f64,
@@ -92,70 +93,97 @@ fn display_menu(egui_ctx: ResMut<EguiContext>) {
     });
 }
 
+fn display_name(ui: &mut Ui, element: Element) {
+    ui.heading(element.name);
+    ui.end_row();
+}
+
+fn display_team(ui: &mut Ui, element: Element) {
+    ui.image(
+        egui::TextureId::User(icons::ICO_TEAM_ENEMY.id),
+        [ICON_SIZE, ICON_SIZE],
+    )
+        .on_hover_text("enemy team");
+    ui.label(element.team);
+    ui.end_row();
+}
+
+fn display_strength(ui: &mut Ui, element: Element) {
+    ui.image(
+        egui::TextureId::User(icons::ICO_STAT_STRENGTH.id),
+        [ICON_SIZE, ICON_SIZE],
+    )
+        .on_hover_text("strength point");
+    ui.label(format!("{0}", element.strength));
+    ui.end_row();
+}
+
+fn display_health(ui: &mut Ui, element: Element) {
+    ui.image(
+        egui::TextureId::User(icons::ICO_HEALTH_POINT.id),
+        [ICON_SIZE, ICON_SIZE],
+    )
+        .on_hover_text("health point");
+    ui.label(format!("{0}", element.health));
+    ui.end_row();
+}
+
+fn display_mana(ui: &mut Ui, element: Element) {
+    ui.image(
+        egui::TextureId::User(icons::ICO_MANA_POINT.id),
+        [ICON_SIZE, ICON_SIZE],
+    )
+        .on_hover_text("mana point");
+    ui.label(format!("{0}", element.mana));
+    ui.end_row();
+}
+
+fn display_armor(ui: &mut Ui, element: Element) {
+    ui.image(
+        egui::TextureId::User(icons::ICO_ARMOR_POINT.id),
+        [ICON_SIZE, ICON_SIZE],
+    )
+        .on_hover_text("armor point");
+    ui.label(format!("{0}", element.armor));
+    ui.end_row();
+}
+
+fn display_damage(ui: &mut Ui, element: Element) {
+    ui.image(
+        egui::TextureId::User(icons::ICO_DAMAGE_POINT.id),
+        [ICON_SIZE, ICON_SIZE],
+    )
+        .on_hover_text("damage point");
+    ui.label(format!("{0}-{1}", element.min_damage, element.max_damage));
+    ui.end_row();
+}
+
+fn display_description(ui: &mut Ui, element: Element) {
+    ui.end_row();
+    ui.heading("Description");
+    ui.end_row();
+
+    ui.label(element.description);
+    ui.end_row();
+}
+
 fn display_element_panel(egui_ctx: ResMut<EguiContext>,
                          selection: ResMut<GuiSelection>) {
     if let Some(element) = selection.selected_element {
         egui::SidePanel::right("element_panel")
             .default_width(200.0)
             .show(egui_ctx.ctx(), |ui| {
-                egui::Grid::new("some_unique_id").show(ui, |ui| {
-                    ui.heading(element.name);
-                    ui.end_row();
+                egui::Grid::new("info_grid").show(ui, |ui| {
+                    display_name(ui, element);
 
-                    ui.image(
-                        egui::TextureId::User(icons::ICO_TEAM_ENEMY.id),
-                        [ICON_SIZE, ICON_SIZE],
-                    )
-                        .on_hover_text("enemy team");
-                    ui.label(element.team);
-                    ui.end_row();
+                    display_team(ui, element);
+                    display_strength(ui, element);
+                    display_health(ui, element);
+                    display_mana(ui, element);
+                    display_damage(ui, element);
+                    display_armor(ui, element);
 
-                    ui.image(
-                        egui::TextureId::User(icons::ICO_STAT_STRENGTH.id),
-                        [ICON_SIZE, ICON_SIZE],
-                    )
-                        .on_hover_text("strength point");
-                    ui.label(format!("{0}", element.strength));
-                    ui.end_row();
-
-                    ui.image(
-                        egui::TextureId::User(icons::ICO_HEALTH_POINT.id),
-                        [ICON_SIZE, ICON_SIZE],
-                    )
-                        .on_hover_text("health point");
-                    ui.label(format!("{0}", element.health));
-                    ui.end_row();
-
-                    ui.image(
-                        egui::TextureId::User(icons::ICO_MANA_POINT.id),
-                        [ICON_SIZE, ICON_SIZE],
-                    )
-                        .on_hover_text("mana point");
-                    ui.label(format!("{0}", element.mana));
-                    ui.end_row();
-
-                    ui.image(
-                        egui::TextureId::User(icons::ICO_ARMOR_POINT.id),
-                        [ICON_SIZE, ICON_SIZE],
-                    )
-                        .on_hover_text("armor point");
-                    ui.label(format!("{0}", element.armor));
-                    ui.end_row();
-
-                    ui.image(
-                        egui::TextureId::User(icons::ICO_DAMAGE_POINT.id),
-                        [ICON_SIZE, ICON_SIZE],
-                    )
-                        .on_hover_text("damage point");
-                    ui.label(format!("{0}-{1}", element.min_damage, element.max_damage));
-                    ui.end_row();
-
-                    ui.end_row();
-                    ui.heading("Description");
-                    ui.end_row();
-
-                    ui.label(element.description);
-                    ui.end_row();
+                    display_description(ui, element);
                 });
             });
     };

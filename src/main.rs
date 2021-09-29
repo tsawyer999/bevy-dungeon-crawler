@@ -4,8 +4,10 @@ mod light;
 mod mesh;
 mod rotator;
 mod icons;
+mod element;
+mod api;
 
-use crate::gui::UiState;
+use crate::gui::{UiState, GuiPlugin};
 use bevy::{pbr::AmbientLight, prelude::*};
 use bevy_egui::EguiPlugin;
 use bevy_mod_picking::{HighlightablePickingPlugin, InteractablePickingPlugin, PickingPlugin};
@@ -23,10 +25,9 @@ fn main() {
         .add_plugin(InteractablePickingPlugin)
         .add_plugin(HighlightablePickingPlugin)
         .add_plugin(EguiPlugin)
+        .add_plugin(GuiPlugin)
         .add_startup_system(setup.system())
         .add_startup_system(gui::load_assets.system())
-        .add_system(gui::update_ui_scale_factor.system())
-        .add_system(gui::ui_example.system())
         .add_system(rotator::rotate.system())
         .add_system(camera::pan_camera.system())
         .add_system(camera::orbit_camera.system())
@@ -40,7 +41,7 @@ fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
 ) {
-    mesh::spawn_meshes(&mut commands, &mut materials, asset_server);
+    mesh::spawn_elements(&mut commands, &mut materials, asset_server);
 
     camera::spawn_camera(
         &mut commands,

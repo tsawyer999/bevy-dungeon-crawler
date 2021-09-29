@@ -2,9 +2,10 @@ use bevy::asset::{AssetServer, Assets, Handle};
 use bevy::ecs::prelude::{Commands, Res, ResMut};
 use bevy::math::Vec3;
 use bevy::pbr::PbrBundle;
-use bevy::prelude::{shape, Mesh, StandardMaterial, Transform};
+use bevy::prelude::{shape, Mesh, StandardMaterial, Transform, BuildChildren};
 use bevy::render::prelude::Color;
-use bevy_mod_picking::PickableBundle;
+use crate::api;
+use crate::element::Element;
 
 pub fn spawn_plane(
     commands: &mut Commands,
@@ -22,12 +23,13 @@ pub fn spawn_plane(
     });
 }
 
-pub fn spawn_mesh(
+pub fn spawn_element(
     commands: &mut Commands,
-    position: Vec3,
+    element: Element,
     mesh: Handle<Mesh>,
     material: Handle<StandardMaterial>,
 ) {
+/*
     commands
         .spawn_bundle(PbrBundle {
             mesh,
@@ -40,9 +42,29 @@ pub fn spawn_mesh(
             ..Default::default()
         })
         .insert_bundle(PickableBundle::default());
+ */
+    commands
+        // Spawn parent entity
+        .spawn_bundle(PbrBundle {
+            transform: Transform::from_translation(element.position),
+            ..Default::default()
+        })
+        .insert(element)
+        .with_children(|parent| {
+            parent.spawn_bundle(PbrBundle {
+                mesh,
+                material,
+                transform: {
+                    let mut transform = Transform::from_translation(Vec3::new(0.0, 0.0, 0.0));
+                    transform.apply_non_uniform_scale(Vec3::new(0.0, 0.0, 0.0));
+                    transform
+                },
+                ..Default::default()
+            });
+        });
 }
 
-pub fn spawn_meshes(
+pub fn spawn_elements(
     commands: &mut Commands,
     materials: &mut ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
@@ -50,17 +72,27 @@ pub fn spawn_meshes(
     let stone_material = materials.add(Color::rgb(0.5, 0.5, 0.5).into());
     let creature_mesh = asset_server.load("models/bat.gltf#Mesh0/Primitive0");
 
-    spawn_mesh(
+    for element in api::get_elements() {
+        spawn_element(
+            commands,
+            element,
+            creature_mesh.clone(),
+            stone_material.clone(),
+        );
+    }
+    /*
+    spawn_element(
         commands,
         Vec3::new(1.0, 0.0, 0.0),
         creature_mesh.clone(),
         stone_material.clone(),
     );
 
-    spawn_mesh(
+    spawn_element(
         commands,
         Vec3::new(-1.0, 0.0, 0.0),
         creature_mesh.clone(),
         stone_material.clone(),
     );
+    */
 }

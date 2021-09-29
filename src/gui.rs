@@ -1,13 +1,29 @@
 use bevy::asset::AssetServer;
-use bevy::ecs::prelude::{Res, ResMut};
+use bevy::ecs::prelude::{Res, ResMut, Query, IntoSystem};
 use bevy::input::keyboard::KeyCode;
 use bevy::input::Input;
 use bevy_egui::{egui, EguiContext, EguiSettings};
+use bevy::input::mouse::MouseButton;
+use bevy_mod_picking::PickingCamera;
+use bevy::app::{Plugin, AppBuilder};
 use crate::icons;
 use crate::icons::{TEXTURES, ICON_SIZE};
+use crate::element::Element;
 
 pub struct UiState {
     pub scale_factor: f64,
+}
+
+pub struct GuiSelection {
+    pub selected_element: Option<Element>
+}
+
+impl Default for GuiSelection {
+    fn default() -> Self {
+        GuiSelection {
+            selected_element: Option::None
+        }
+    }
 }
 
 pub fn load_assets(mut egui_context: ResMut<EguiContext>, assets: Res<AssetServer>) {
@@ -18,7 +34,7 @@ pub fn load_assets(mut egui_context: ResMut<EguiContext>, assets: Res<AssetServe
 
 }
 
-pub fn update_ui_scale_factor(
+fn update_ui_scale_factor(
     keyboard_input: Res<Input<KeyCode>>,
     mut ui_state: ResMut<UiState>,
     mut egui_settings: ResMut<EguiSettings>,
@@ -44,7 +60,29 @@ pub fn update_ui_scale_factor(
     }
 }
 
-pub fn ui_example(egui_ctx: ResMut<EguiContext>) {
+fn select_mesh(
+    mouse_button_inputs: Res<Input<MouseButton>>,
+    mut selection: ResMut<GuiSelection>,
+    // entities_query: Query<&Entities>,
+    picking_camera_query: Query<&PickingCamera>,
+) {
+    if !mouse_button_inputs.just_pressed(MouseButton::Left) {
+        return;
+    }
+
+    if let Some(picking_camera) = picking_camera_query.iter().last() {
+        if let Some((mesh_entity, _intersection)) = picking_camera.intersect_top() {
+            println!("{0:?}", mesh_entity);
+            // if let Ok(_entity) = entities_query.get(mesh_entity) {
+            //     selection.selected_element = Some(mesh_entity);
+            // }
+        } else {
+            // selection.entity = None;
+        }
+    }
+}
+
+fn ui_example(egui_ctx: ResMut<EguiContext>) {
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         egui::menu::bar(ui, |ui| {
             egui::menu::menu(ui, "File", |ui| {
@@ -98,7 +136,15 @@ pub fn ui_example(egui_ctx: ResMut<EguiContext>) {
 
                 ui.label("Bat are annoying creature hard to hit.");
                 ui.end_row();
-
             });
         });
+}
+
+pub struct GuiPlugin;
+impl Plugin for GuiPlugin {
+    fn build(&self, app: &mut AppBuilder) {
+        app.add_system(update_ui_scale_factor.system())
+            .add_system(ui_example.system())
+            .init_resource::<GuiSelection>();
+    }
 }

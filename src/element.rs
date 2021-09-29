@@ -1,5 +1,6 @@
 use bevy::math::Vec3;
 
+#[derive(Copy, Clone)]
 pub struct Element {
     pub name: &'static str,
     pub description: &'static str,

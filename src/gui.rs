@@ -31,7 +31,6 @@ pub fn load_assets(mut egui_context: ResMut<EguiContext>, assets: Res<AssetServe
         let texture_handle = assets.load(texture.path);
         egui_context.set_egui_texture(texture.id.clone(), texture_handle);
     }
-
 }
 
 fn update_ui_scale_factor(
@@ -60,22 +59,31 @@ fn update_ui_scale_factor(
     }
 }
 
-fn select_mesh(
+fn select_element(
     mouse_button_inputs: Res<Input<MouseButton>>,
     mut selection: ResMut<GuiSelection>,
-    // entities_query: Query<&Entities>,
+    elements_query: Query<&Element>,
     picking_camera_query: Query<&PickingCamera>,
 ) {
     if !mouse_button_inputs.just_pressed(MouseButton::Left) {
         return;
     }
 
+    // match selection.selected_element {
+    //
+    // }
+    match selection.selected_element {
+        Some(x) => println!("selection: {0}", x.name),
+        None => println!("selection: none")
+    }
     if let Some(picking_camera) = picking_camera_query.iter().last() {
-        if let Some((mesh_entity, _intersection)) = picking_camera.intersect_top() {
-            println!("{0:?}", mesh_entity);
-            // if let Ok(_entity) = entities_query.get(mesh_entity) {
-            //     selection.selected_element = Some(mesh_entity);
-            // }
+        if let Some((element_entity, _intersection)) = picking_camera.intersect_top() {
+            println!("200");
+            if let Ok(element) = elements_query.get(element_entity) {
+                println!("300");
+                println!("{0}", element.name);
+                // selection.selected_element = Some(element_entity);
+            }
         } else {
             // selection.entity = None;
         }
@@ -145,6 +153,7 @@ impl Plugin for GuiPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(update_ui_scale_factor.system())
             .add_system(ui_example.system())
+            .add_system(select_element.system())
             .init_resource::<GuiSelection>();
     }
 }

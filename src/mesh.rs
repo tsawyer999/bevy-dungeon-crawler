@@ -6,6 +6,7 @@ use bevy::prelude::{shape, Mesh, StandardMaterial, Transform, BuildChildren};
 use bevy::render::prelude::Color;
 use crate::api;
 use crate::element::Element;
+use bevy_mod_picking::PickableBundle;
 
 pub fn spawn_plane(
     commands: &mut Commands,
@@ -29,24 +30,9 @@ pub fn spawn_element(
     mesh: Handle<Mesh>,
     material: Handle<StandardMaterial>,
 ) {
-/*
     commands
         .spawn_bundle(PbrBundle {
-            mesh,
-            material,
-            transform: {
-                let mut transform = Transform::from_translation(position);
-                transform.scale = Vec3::new(0.01, 0.01, 0.01);
-                transform
-            },
-            ..Default::default()
-        })
-        .insert_bundle(PickableBundle::default());
- */
-    commands
-        // Spawn parent entity
-        .spawn_bundle(PbrBundle {
-            transform: Transform::from_translation(element.position),
+            transform: Transform::from_translation(element.position.clone()),
             ..Default::default()
         })
         .insert(element)
@@ -56,11 +42,11 @@ pub fn spawn_element(
                 material,
                 transform: {
                     let mut transform = Transform::from_translation(Vec3::new(0.0, 0.0, 0.0));
-                    transform.apply_non_uniform_scale(Vec3::new(0.0, 0.0, 0.0));
+                    transform.scale = Vec3::new(0.01, 0.01, 0.01);
                     transform
                 },
                 ..Default::default()
-            });
+            }).insert_bundle(PickableBundle::default());
         });
 }
 
@@ -80,19 +66,4 @@ pub fn spawn_elements(
             stone_material.clone(),
         );
     }
-    /*
-    spawn_element(
-        commands,
-        Vec3::new(1.0, 0.0, 0.0),
-        creature_mesh.clone(),
-        stone_material.clone(),
-    );
-
-    spawn_element(
-        commands,
-        Vec3::new(-1.0, 0.0, 0.0),
-        creature_mesh.clone(),
-        stone_material.clone(),
-    );
-    */
 }

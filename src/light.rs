@@ -1,10 +1,14 @@
-use bevy::prelude::*;
+use crate::rotator::Rotates;
+use bevy::ecs::prelude::Commands;
+use bevy::math::Vec3;
+use bevy::pbr::LightBundle;
+use bevy::prelude::Transform;
 
-pub struct Rotates;
-
-pub fn rotator(time: Res<Time>, mut query: Query<&mut Transform, With<Rotates>>) {
-    for mut transform in query.iter_mut() {
-        let y_position = (4.0 * std::f32::consts::PI / 20.0) * time.delta_seconds();
-        *transform = Transform::from_rotation(Quat::from_rotation_y(y_position)) * *transform;
-    }
+pub fn spawn_rotator_light(commands: &mut Commands, position: Vec3) {
+    commands
+        .spawn_bundle(LightBundle {
+            transform: Transform::from_translation(position),
+            ..Default::default()
+        })
+        .insert(Rotates);
 }

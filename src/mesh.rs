@@ -6,6 +6,7 @@ use bevy::math::Vec3;
 use bevy::pbr::PbrBundle;
 use bevy::prelude::{shape, BuildChildren, Mesh, StandardMaterial, Transform};
 use bevy::render::prelude::Color;
+use bevy_mod_picking::PickableBundle;
 
 pub fn spawn_plane(
     commands: &mut Commands,
@@ -46,6 +47,7 @@ pub fn spawn_element(
                     },
                     ..Default::default()
                 })
+                .insert_bundle(PickableBundle::default())
                 .insert(element);
         });
 }

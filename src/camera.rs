@@ -1,6 +1,7 @@
 use bevy::input::mouse::{MouseMotion, MouseWheel};
 use bevy::prelude::*;
 use bevy::render::camera::PerspectiveProjection;
+use bevy_mod_picking::PickingCameraBundle;
 
 pub struct PanOrbitCamera {
     pub focus: Vec3,
@@ -146,5 +147,6 @@ pub fn spawn_camera(commands: &mut Commands, position: Vec3, look_at: Vec3) {
         .insert(PanOrbitCamera {
             radius,
             ..Default::default()
-        });
+        })
+        .insert_bundle(PickingCameraBundle::default());
 }

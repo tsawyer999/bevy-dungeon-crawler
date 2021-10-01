@@ -1,4 +1,4 @@
-use crate::element::{Element};
+use crate::element::Element;
 use crate::icons;
 use crate::icons::{ICON_SIZE, TEXTURES};
 use bevy::app::{AppBuilder, Plugin};
@@ -7,16 +7,16 @@ use bevy::ecs::prelude::{IntoSystem, Query, Res, ResMut};
 use bevy::input::keyboard::KeyCode;
 use bevy::input::mouse::MouseButton;
 use bevy::input::Input;
+use bevy_egui::egui::Ui;
 use bevy_egui::{egui, EguiContext, EguiSettings};
 use bevy_mod_picking::PickingCamera;
-use bevy_egui::egui::Ui;
 
 pub struct UiState {
     pub scale_factor: f64,
 }
 
 pub struct GuiSelection {
-    pub selected_element: Option<Element>
+    pub selected_element: Option<Element>,
 }
 
 impl Default for GuiSelection {
@@ -30,7 +30,7 @@ impl Default for GuiSelection {
 pub fn load_assets(mut egui_context: ResMut<EguiContext>, assets: Res<AssetServer>) {
     for (_, texture) in TEXTURES.iter().enumerate() {
         let texture_handle = assets.load(texture.path);
-        egui_context.set_egui_texture(texture.id.clone(), texture_handle);
+        egui_context.set_egui_texture(texture.id, texture_handle);
     }
 }
 
@@ -103,7 +103,7 @@ fn display_team(ui: &mut Ui, element: Element) {
         egui::TextureId::User(icons::ICO_TEAM_ENEMY.id),
         [ICON_SIZE, ICON_SIZE],
     )
-        .on_hover_text("enemy team");
+    .on_hover_text("enemy team");
     ui.label(element.team);
     ui.end_row();
 }
@@ -113,7 +113,7 @@ fn display_strength(ui: &mut Ui, element: Element) {
         egui::TextureId::User(icons::ICO_STAT_STRENGTH.id),
         [ICON_SIZE, ICON_SIZE],
     )
-        .on_hover_text("strength point");
+    .on_hover_text("strength point");
     ui.label(format!("{0}", element.strength));
     ui.end_row();
 }
@@ -123,7 +123,7 @@ fn display_health(ui: &mut Ui, element: Element) {
         egui::TextureId::User(icons::ICO_HEALTH_POINT.id),
         [ICON_SIZE, ICON_SIZE],
     )
-        .on_hover_text("health point");
+    .on_hover_text("health point");
     ui.label(format!("{0}", element.health));
     ui.end_row();
 }
@@ -133,7 +133,7 @@ fn display_mana(ui: &mut Ui, element: Element) {
         egui::TextureId::User(icons::ICO_MANA_POINT.id),
         [ICON_SIZE, ICON_SIZE],
     )
-        .on_hover_text("mana point");
+    .on_hover_text("mana point");
     ui.label(format!("{0}", element.mana));
     ui.end_row();
 }
@@ -143,7 +143,7 @@ fn display_armor(ui: &mut Ui, element: Element) {
         egui::TextureId::User(icons::ICO_ARMOR_POINT.id),
         [ICON_SIZE, ICON_SIZE],
     )
-        .on_hover_text("armor point");
+    .on_hover_text("armor point");
     ui.label(format!("{0}", element.armor));
     ui.end_row();
 }
@@ -153,7 +153,7 @@ fn display_damage(ui: &mut Ui, element: Element) {
         egui::TextureId::User(icons::ICO_DAMAGE_POINT.id),
         [ICON_SIZE, ICON_SIZE],
     )
-        .on_hover_text("damage point");
+    .on_hover_text("damage point");
     ui.label(format!("{0}-{1}", element.min_damage, element.max_damage));
     ui.end_row();
 }
@@ -167,11 +167,10 @@ fn display_description(ui: &mut Ui, element: Element) {
     ui.end_row();
 }
 
-fn display_element_panel(egui_ctx: ResMut<EguiContext>,
-                         selection: ResMut<GuiSelection>) {
+fn display_element_panel(egui_ctx: ResMut<EguiContext>, selection: ResMut<GuiSelection>) {
     let element = match selection.selected_element {
         Some(e) => e,
-        None => return
+        None => return,
     };
 
     egui::SidePanel::right("element_panel")

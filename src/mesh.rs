@@ -32,7 +32,7 @@ pub fn spawn_element(
 ) {
     commands
         .spawn_bundle(PbrBundle {
-            transform: Transform::from_translation(element.position.clone()),
+            transform: Transform::from_translation(element.position),
             ..Default::default()
         })
         .with_children(|parent| {
